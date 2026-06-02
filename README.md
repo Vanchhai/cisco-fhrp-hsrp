@@ -1,4 +1,4 @@
-# FHRP - HSRP
+# FHRP - HSRP + EIGRP
 
 Common Types of FHRP
 HSRP (Hot Standby Router Protocol): A Cisco-proprietary protocol that uses an Active router to forward traffic, while a Standby router waits to take over if the Active router fails.
@@ -85,4 +85,40 @@ Interface   Grp  Pri P State    Active          Standby         Virtual IP
 Vl10        10   100   Standby  192.168.10.1    local           192.168.10.254 
 Vl20        20   100   Standby  192.168.20.1    local           192.168.20.254 
 
+```
+## EIGRP Config
+
+
+```bash
+Router R1
+!
+router eigrp 1
+ redistribute static 
+ network 172.16.1.0 0.0.0.255
+ network 172.16.2.0 0.0.0.255
+!
+```
+
+```bash
+Switch L3S1
+!
+router eigrp 1
+ passive-interface FastEthernet0/2
+ passive-interface FastEthernet0/3
+ network 172.16.1.0 0.0.0.255
+ network 192.168.20.0
+ network 192.168.10.0
+ no auto-summary
+!
+```
+```bash
+Switch L3S2
+!
+router eigrp 1
+ passive-interface FastEthernet0/2
+ network 192.168.10.0
+ network 192.168.20.0
+ network 172.16.2.0 0.0.0.255
+ no auto-summary
+!
 ```
