@@ -78,13 +78,6 @@ interface Vlan20
  standby version 2
  standby 20 ip 192.168.20.254
 !
-router eigrp 1
- passive-interface FastEthernet0/2
- network 192.168.10.0
- network 192.168.20.0
- network 172.16.2.0 0.0.0.255
- no auto-summary
-!
 L3S2#show standby brief 
                      P indicates configured to preempt.
                      |
