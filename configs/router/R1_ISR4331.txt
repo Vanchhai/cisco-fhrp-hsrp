@@ -1,0 +1,30 @@
+R1#show running-config 
+Building configuration...
+
+Current configuration : 829 bytes
+!
+hostname R1
+!
+interface GigabitEthernet0/0/0
+ ip address 172.16.3.1 255.255.255.0
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0/1
+ ip address 172.16.1.1 255.255.255.0
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0/2
+ ip address 172.16.2.1 255.255.255.0
+ duplex auto
+ speed auto
+!
+router eigrp 1
+ redistribute static 
+ network 172.16.1.0 0.0.0.255
+ network 172.16.2.0 0.0.0.255
+!
+ip classless
+ip route 0.0.0.0 0.0.0.0 GigabitEthernet0/0/0 
+!

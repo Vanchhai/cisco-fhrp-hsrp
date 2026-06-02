@@ -1,0 +1,28 @@
+L2S1#show running-config 
+Building configuration...
+
+Current configuration : 1226 bytes
+!
+hostname L2S1
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+interface FastEthernet0/1
+ switchport mode trunk
+!
+interface FastEthernet0/2
+ switchport mode trunk
+!
+interface FastEthernet0/3
+ switchport access vlan 10
+ switchport mode access
+!
+interface FastEthernet0/4
+ switchport access vlan 10
+ switchport mode access
+!
+interface Vlan1
+ no ip address
+ shutdown
+!

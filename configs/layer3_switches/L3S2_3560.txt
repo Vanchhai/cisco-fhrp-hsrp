@@ -1,0 +1,48 @@
+L3S2#show running-config 
+Building configuration...
+
+Current configuration : 1773 bytes
+!
+hostname L3S2
+!
+ip routing
+!
+spanning-tree mode pvst
+!
+interface FastEthernet0/1
+ no switchport
+ ip address 172.16.2.2 255.255.255.0
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/3
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan10
+ mac-address 00e0.b011.0401
+ ip address 192.168.10.2 255.255.255.0
+ standby version 2
+ standby 10 ip 192.168.10.254
+!
+interface Vlan20
+ mac-address 00e0.b011.0402
+ ip address 192.168.20.2 255.255.255.0
+ standby version 2
+ standby 20 ip 192.168.20.254
+!
+router eigrp 1
+ passive-interface FastEthernet0/2
+ network 192.168.10.0
+ network 192.168.20.0
+ network 172.16.2.0 0.0.0.255
+ no auto-summary
+!
