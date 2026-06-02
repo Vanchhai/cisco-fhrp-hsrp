@@ -9,7 +9,7 @@ GLBP (Gateway Load Balancing Protocol): A Cisco-proprietary protocol that not on
 
 ## Network Topology
 
-![Network Topology](./topology/topology-image.png)
+![Network Topology](./topology/topology-img.png)
 
 ## Network Overview & Technical Specifications
 
