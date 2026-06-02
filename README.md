@@ -97,6 +97,52 @@ router eigrp 1
  network 172.16.1.0 0.0.0.255
  network 172.16.2.0 0.0.0.255
 !
+R1#show ip route 
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+       * - candidate default, U - per-user static route, o - ODR
+       P - periodic downloaded static route
+
+Gateway of last resort is 0.0.0.0 to network 0.0.0.0
+
+     172.16.0.0/16 is variably subnetted, 6 subnets, 2 masks
+C       172.16.1.0/24 is directly connected, GigabitEthernet0/0/1
+L       172.16.1.1/32 is directly connected, GigabitEthernet0/0/1
+C       172.16.2.0/24 is directly connected, GigabitEthernet0/0/2
+L       172.16.2.1/32 is directly connected, GigabitEthernet0/0/2
+C       172.16.3.0/24 is directly connected, GigabitEthernet0/0/0
+L       172.16.3.1/32 is directly connected, GigabitEthernet0/0/0
+D    192.168.10.0/24 [90/25628160] via 172.16.1.2, 00:15:37, GigabitEthernet0/0/1
+                     [90/25628160] via 172.16.2.2, 00:15:37, GigabitEthernet0/0/2
+D    192.168.20.0/24 [90/25628160] via 172.16.1.2, 00:15:37, GigabitEthernet0/0/1
+                     [90/25628160] via 172.16.2.2, 00:15:37, GigabitEthernet0/0/2
+S*   0.0.0.0/0 is directly connected, GigabitEthernet0/0/0
+!
+R1#show ip protocols 
+
+Routing Protocol is "eigrp  1 " 
+  Outgoing update filter list for all interfaces is not set 
+  Incoming update filter list for all interfaces is not set 
+  Default networks flagged in outgoing updates  
+  Default networks accepted from incoming updates 
+  EIGRP metric weight K1=1, K2=0, K3=1, K4=0, K5=0
+  EIGRP maximum hopcount 100
+  EIGRP maximum metric variance 1
+Redistributing: eigrp 1, static 
+  Automatic network summarization is not in effect  
+  Maximum path: 4
+  Routing for Networks:  
+     172.16.1.0/24
+     172.16.2.0/24
+  Routing Information Sources:  
+    Gateway         Distance      Last Update 
+    172.16.1.2      90            113        
+    172.16.2.2      90            0          
+  Distance: internal 90 external 170
+!
 ```
 
 ```bash
@@ -110,6 +156,24 @@ router eigrp 1
  network 192.168.10.0
  no auto-summary
 !
+L3S1#show ip route 
+Codes: C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+       * - candidate default, U - per-user static route, o - ODR
+       P - periodic downloaded static route
+
+Gateway of last resort is 172.16.1.1 to network 0.0.0.0
+
+     172.16.0.0/24 is subnetted, 2 subnets
+C       172.16.1.0 is directly connected, FastEthernet0/1
+D       172.16.2.0 [90/30720] via 172.16.1.1, 00:20:14, FastEthernet0/1
+C    192.168.10.0/24 is directly connected, Vlan10
+C    192.168.20.0/24 is directly connected, Vlan20
+D*EX 0.0.0.0/0 [170/53760] via 172.16.1.1, 00:20:15, FastEthernet0/1
+!
 ```
 ```bash
 Switch L3S2
@@ -121,4 +185,177 @@ router eigrp 1
  network 172.16.2.0 0.0.0.255
  no auto-summary
 !
+L3S2#show ip route 
+Codes: C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+       * - candidate default, U - per-user static route, o - ODR
+       P - periodic downloaded static route
+
+Gateway of last resort is 172.16.2.1 to network 0.0.0.0
+
+     172.16.0.0/24 is subnetted, 2 subnets
+D       172.16.1.0 [90/30720] via 172.16.2.1, 00:20:55, FastEthernet0/1
+C       172.16.2.0 is directly connected, FastEthernet0/1
+C    192.168.10.0/24 is directly connected, Vlan10
+C    192.168.20.0/24 is directly connected, Vlan20
+D*EX 0.0.0.0/0 [170/53760] via 172.16.2.1, 00:20:55, FastEthernet0/1
+!
 ```
+
+## VLAN Config
+```bash
+Switch L3S1
+L3S1#show vlan brief 
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/4, Fa0/5, Fa0/6, Fa0/7
+                                                Fa0/8, Fa0/9, Fa0/10, Fa0/11
+                                                Fa0/12, Fa0/13, Fa0/14, Fa0/15
+                                                Fa0/16, Fa0/17, Fa0/18, Fa0/19
+                                                Fa0/20, Fa0/21, Fa0/22, Fa0/23
+                                                Fa0/24, Gig0/1, Gig0/2
+10   IT                               active    
+20   FN                               active    
+1002 fddi-default                     active    
+1003 token-ring-default               active    
+1004 fddinet-default                  active    
+1005 trnet-default                    active    
+L3S1#
+```
+
+```bash
+Switch L3S2
+L3S2#show vlan brief 
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/4, Fa0/5, Fa0/6, Fa0/7
+                                                Fa0/8, Fa0/9, Fa0/10, Fa0/11
+                                                Fa0/12, Fa0/13, Fa0/14, Fa0/15
+                                                Fa0/16, Fa0/17, Fa0/18, Fa0/19
+                                                Fa0/20, Fa0/21, Fa0/22, Fa0/23
+                                                Fa0/24, Gig0/1, Gig0/2
+10   IT                               active    
+20   FN                               active    
+1002 fddi-default                     active    
+1003 token-ring-default               active    
+1004 fddinet-default                  active    
+1005 trnet-default                    active    
+```
+
+```bash
+L2S1#show vlan brief 
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/5, Fa0/6, Fa0/7, Fa0/8
+                                                Fa0/9, Fa0/10, Fa0/11, Fa0/12
+                                                Fa0/13, Fa0/14, Fa0/15, Fa0/16
+                                                Fa0/17, Fa0/18, Fa0/19, Fa0/20
+                                                Fa0/21, Fa0/22, Fa0/23, Fa0/24
+                                                Gig0/1, Gig0/2
+10   IT                               active    Fa0/3, Fa0/4
+20   FN                               active    
+1002 fddi-default                     active    
+1003 token-ring-default               active    
+1004 fddinet-default                  active    
+1005 trnet-default                    active  
+```
+```bash
+L2S2#show vlan brief 
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/5, Fa0/6, Fa0/7, Fa0/8
+                                                Fa0/9, Fa0/10, Fa0/11, Fa0/12
+                                                Fa0/13, Fa0/14, Fa0/15, Fa0/16
+                                                Fa0/17, Fa0/18, Fa0/19, Fa0/20
+                                                Fa0/21, Fa0/22, Fa0/23, Fa0/24
+                                                Gig0/1, Gig0/2
+10   IT                               active    
+20   FN                               active    Fa0/3, Fa0/4
+1002 fddi-default                     active    
+1003 token-ring-default               active    
+1004 fddinet-default                  active    
+1005 trnet-default                    active  
+```
+## Trunk Port Config
+
+```bash
+Switch L3S1
+L3S1#show interfaces trunk 
+Port        Mode         Encapsulation  Status        Native vlan
+Fa0/2       on           802.1q         trunking      1
+Fa0/3       on           802.1q         trunking      1
+
+Port        Vlans allowed on trunk
+Fa0/2       1-1005
+Fa0/3       1-1005
+
+Port        Vlans allowed and active in management domain
+Fa0/2       1,10,20
+Fa0/3       1,10,20
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Fa0/2       1,10,20
+Fa0/3       1,10,20
+
+Switch L3S2
+L3S2#show interfaces trunk 
+Port        Mode         Encapsulation  Status        Native vlan
+Fa0/2       on           802.1q         trunking      1
+Fa0/3       on           802.1q         trunking      1
+
+Port        Vlans allowed on trunk
+Fa0/2       1-1005
+Fa0/3       1-1005
+
+Port        Vlans allowed and active in management domain
+Fa0/2       1,10,20
+Fa0/3       1,10,20
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Fa0/2       1,10,20
+Fa0/3       1,10,20
+
+Switch L2S1
+L2S1#show vlan brief 
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/5, Fa0/6, Fa0/7, Fa0/8
+                                                Fa0/9, Fa0/10, Fa0/11, Fa0/12
+                                                Fa0/13, Fa0/14, Fa0/15, Fa0/16
+                                                Fa0/17, Fa0/18, Fa0/19, Fa0/20
+                                                Fa0/21, Fa0/22, Fa0/23, Fa0/24
+                                                Gig0/1, Gig0/2
+10   IT                               active    Fa0/3, Fa0/4
+20   FN                               active    
+1002 fddi-default                     active    
+1003 token-ring-default               active    
+1004 fddinet-default                  active    
+1005 trnet-default                    active    
+
+Switch L2S2
+L2S2#show vlan brief 
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/5, Fa0/6, Fa0/7, Fa0/8
+                                                Fa0/9, Fa0/10, Fa0/11, Fa0/12
+                                                Fa0/13, Fa0/14, Fa0/15, Fa0/16
+                                                Fa0/17, Fa0/18, Fa0/19, Fa0/20
+                                                Fa0/21, Fa0/22, Fa0/23, Fa0/24
+                                                Gig0/1, Gig0/2
+10   IT                               active    
+20   FN                               active    Fa0/3, Fa0/4
+1002 fddi-default                     active    
+1003 token-ring-default               active    
+1004 fddinet-default                  active    
+1005 trnet-default                    active  
+
+
